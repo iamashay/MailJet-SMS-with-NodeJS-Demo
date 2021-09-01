@@ -30,8 +30,8 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an instruction of how to list things you need to use the sample project and how to install them.
-
+Follow the simple steps to run the project on your localhost.
+  
 * npm
   ```sh
   npm install npm@latest -g
@@ -41,7 +41,7 @@ This is an instruction of how to list things you need to use the sample project 
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/iamashay/MailJet-SMS-with-NodeJS-Sample.git
    ```
 2. Install NPM packages
    ```sh
