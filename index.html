@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+    <link rel="stylesheet" href="assets/css/Contact-Form-Clean.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+</head>
+
+<body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="72" style="background: #f1f7fc;">
+    <header style="height: 70px;"></header>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav">
+        <div class="container"><a class="navbar-brand" href="#page-top">MailjET Sample</a></div>
+    </nav>
+    <section class="contact-clean">
+
+
+
+        <form id="smsform" onsubmit="sendsms()">
+            <h1>Send SMS</h1>
+            <hr>
+            <div class="mb-3">
+                <input class="form-control" type="tel" id="mnumber" placeholder="Mobile Number" required=""
+                    name="mnumber" pattern="\d{10}" title="Phone number should be of 10 digits">
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" name="message" placeholder="Message" rows="14" required=""></textarea>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary w-100" id="smssubmit" type="submit">send
+                </button>
+            </div>
+
+            <div class="alert alert-success d-none" role="alert">
+
+            </div>
+            <div class="alert alert-danger d-none" role="alert">
+
+            </div>
+        </form>
+    </section>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/freelancer.js"></script>
+    <script type="text/javascript">
+        function sendsms() {
+            document.getElementsByClassName("alert")[0].classList.add("d-none");
+            document.getElementsByClassName("alert")[1].classList.add("d-none");
+            event.preventDefault();
+            const phoneNumber = phoneInput.getNumber();
+
+            const url = window.location.origin + "/send";
+            var smssubmit = document.getElementById("smssubmit");
+
+            if (!smssubmit.disable) {
+                smssubmit.disable = true;
+                smssubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+                const phoneNumber = encodeURIComponent(phoneInput.getNumber());
+                var msg = encodeURI(document.getElementsByName('message')[0].value);
+                const data = `mnumber=${phoneNumber}&message=${msg}`;
+                //console.log(data)
+                const xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+
+                xhr.addEventListener("readystatechange", function () {
+
+
+                    if (this.readyState === this.DONE) {
+                        smssubmit.innerHTML = "Send";
+                        smssubmit.disable = false;
+
+                        body = JSON.parse(this.responseText);
+                        //console.log(body.ErrorCodes)
+                        if (body.ErrorMessage) {
+                            var alertbox = document.getElementsByClassName("alert-danger")[0];
+                            alertbox.classList.remove("d-none");
+                            alertbox.innerHTML = "SMS wasn't sent. Error: " + body.ErrorMessage
+
+                        } else {
+                            var alertbox = document.getElementsByClassName("alert-success")[0];
+                            alertbox.classList.remove("d-none");
+                            alertbox.innerHTML = "SMS has been processed. It will be sent shortly.";
+                        }
+
+
+                    }
+                });
+
+                xhr.open("POST", url);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                xhr.send(data);
+
+            }
+
+        }
+    </script>
+    <script>
+        function getIp(callback) {
+            fetch('http://ip-api.com/json/', { headers: { 'Accept': 'application/json' } })
+                .then((resp) => resp.json())
+                .catch(() => {
+                    return {
+                        country: 'us',
+                    };
+                })
+                .then((resp) => callback(resp.countryCode));
+        }
+
+        const phoneInputField = document.querySelector("#mnumber");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            initialCountry: "auto",
+            geoIpLookup: getIp,
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    </script>
+    <style>
+        .iti {
+            width: 100%;
+        }
+    </style>
+</body>
+
+</html>
