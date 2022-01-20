@@ -40,7 +40,6 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-//sendsms("8709776795")
 app.use('/assets', express.static(__dirname + '/assets'));
 
 app.post('/send', function (req, res) {
